@@ -15,70 +15,112 @@ const acceptedTypes = new Set([
 ]);
 
 export async function POST(request: NextRequest) {
-  const auth = readAuth(request);
-  if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const auth = readAuth(request);
+    if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const formData = await request.formData();
-  const file = formData.get("file");
-  const targetRole = String(formData.get("targetRole") || "Software Engineering Intern");
+    const formData = await request.formData();
+    const file = formData.get("file");
+    const targetRole = String(formData.get("targetRole") || "Software Engineering Intern");
 
-  if (!(file instanceof File)) {
-    return NextResponse.json({ error: "Resume file is required." }, { status: 400 });
-  }
+    // Accept web File or form-like object with arrayBuffer() (server runtimes may provide different File implementations)
+    if (!file || (!((file as any) instanceof File) && typeof (file as any).arrayBuffer !== "function")) {
+      return NextResponse.json({ error: "Resume file is required." }, { status: 400 });
+    }
 
-  const extension = path.extname(file.name).toLowerCase();
-  const isAcceptedExtension = extension === ".pdf" || extension === ".docx" || extension === ".doc";
-  if (!acceptedTypes.has(file.type) && !isAcceptedExtension) {
-    return NextResponse.json({ error: "Please upload a PDF or DOCX resume." }, { status: 415 });
-  }
+    // Normalize file-like properties safely across runtimes
+    const fileName = (file as any)?.name || "upload";
+    const fileType = (file as any)?.type || "";
+    const fileSize = typeof (file as any)?.size === "number" ? (file as any).size : undefined;
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
+    // Validate file size (limit to 8MB for serverless safety)
+    const MAX_BYTES = Number(process.env.MAX_UPLOAD_BYTES || 8 * 1024 * 1024);
+    if (typeof fileSize === "number" && fileSize > MAX_BYTES) {
+      return NextResponse.json({ error: `File too large (max ${Math.round(MAX_BYTES / 1024 / 1024)} MB).` }, { status: 413 });
+    }
 
-  const safeName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "-")}`;
-  const diskPath = path.join(uploadDir, safeName);
-  await writeFile(diskPath, buffer);
+    const extension = path.extname(fileName).toLowerCase();
+    const isAcceptedExtension = extension === ".pdf" || extension === ".docx" || extension === ".doc";
+    if (!acceptedTypes.has(fileType) && !isAcceptedExtension) {
+      return NextResponse.json({ error: "Please upload a PDF or DOCX resume." }, { status: 415 });
+    }
 
-  const extractedText = extractReadableText(buffer, file.name);
-  const localAnalysis = analyzeResumeLocally(extractedText, targetRole);
-  const report = await generateGeminiJson<DetailedResumeAnalysis>(
-    `Analyze this resume for a student targeting ${targetRole}. Include ATS score, missing keywords, strengths, weaknesses, improvement suggestions, project quality score/notes, and role fit score/analysis.\n\nResume text:\n${extractedText}`,
-    localAnalysis
-  );
-  const analysis = normalizeAnalysis(report);
+    // Read file buffer safely
+    let buffer: Buffer;
+    try {
+      buffer = Buffer.from(await (file as any).arrayBuffer());
+    } catch (err) {
+      return NextResponse.json({ error: "Could not read uploaded file." }, { status: 400 });
+    }
 
-  if (process.env.MONGODB_URI) {
-    await connectToDatabase();
-    const resume = await Resume.create({
-      userId: auth.userId,
-      fileName: file.name,
-      fileType: file.type || extension,
-      extractedText,
-      source: "upload"
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    await mkdir(uploadDir, { recursive: true });
+
+    const safeName = `${Date.now()}-${fileName.replace(/[^a-zA-Z0-9._-]/g, "-")}`;
+    const diskPath = path.join(uploadDir, safeName);
+    try {
+      await writeFile(diskPath, buffer);
+    } catch (err) {
+      console.warn("Upload write failed");
+      // continue; we still return analysis even if disk write failed in some environments
+    }
+
+   const extractedText = await extractReadableText(buffer, (file as File).name);
+    const localAnalysis = analyzeResumeLocally(extractedText, targetRole);
+
+    // Call Gemini with robust try/catch and rely on generateGeminiJson's fallback behavior
+    let report: DetailedResumeAnalysis;
+    try {
+      report = await generateGeminiJson<DetailedResumeAnalysis>(
+        `Analyze this resume for a student targeting ${targetRole}. Include ATS score, missing keywords, strengths, weaknesses, improvement suggestions, project quality score/notes, and role fit score/analysis.\n\nResume text:\n${extractedText}`,
+        localAnalysis
+      );
+    } catch (err) {
+      console.warn("Gemini fallback used");
+      report = localAnalysis;
+    }
+
+    const analysis = normalizeAnalysis(report);
+
+    if (process.env.MONGODB_URI) {
+      try {
+        await connectToDatabase();
+        const resume = await Resume.create({
+          userId: auth.userId,
+          fileName,
+          fileType: fileType || extension,
+          extractedText,
+          source: "upload"
+        });
+        await ResumeAnalysis.create({
+          userId: auth.userId,
+          resumeId: resume._id,
+          atsScore: analysis.atsScore,
+          summary: analysis.summary,
+          strengths: analysis.strengths,
+          weaknesses: analysis.weaknesses,
+          missingSkills: analysis.missingSkills,
+          recommendations: analysis.recommendations,
+          keywords: analysis.keywords,
+          improvementSuggestions: analysis.improvementSuggestions,
+          projectQuality: analysis.projectQuality,
+          roleFit: analysis.roleFit
+        });
+      } catch (err) {
+        console.warn("Resume DB persist failed");
+      }
+    }
+
+    return NextResponse.json({
+      file: {
+        name: fileName,
+        size: typeof fileSize === "number" ? fileSize : buffer.length,
+        url: `/uploads/${safeName}`
+      },
+      analysis
     });
-    await ResumeAnalysis.create({
-      userId: auth.userId,
-      resumeId: resume._id,
-      atsScore: analysis.atsScore,
-      summary: analysis.summary,
-      strengths: analysis.strengths,
-      weaknesses: analysis.weaknesses,
-      missingSkills: analysis.missingSkills,
-      recommendations: analysis.recommendations,
-      keywords: analysis.keywords,
-      improvementSuggestions: analysis.improvementSuggestions,
-      projectQuality: analysis.projectQuality,
-      roleFit: analysis.roleFit
-    });
+  } catch (err) {
+    console.warn("/api/resume/upload error: handled");
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
-
-  return NextResponse.json({
-    file: {
-      name: file.name,
-      size: file.size,
-      url: `/uploads/${safeName}`
-    },
-    analysis
-  });
 }
