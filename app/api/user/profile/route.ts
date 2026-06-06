@@ -26,18 +26,18 @@ const ProfileSchema = z.object({
   preferences: PreferencesSchema.optional()
 });
 
-const demoProfile = {
-  name: "Anaya Rao",
-  email: "anaya@example.com",
-  targetRole: "Embedded Software Intern",
-  skills: "Embedded C, React, IoT, debugging",
-  interests: "EV systems, product engineering, firmware",
-  locations: "Bengaluru, Hyderabad, Remote",
-  companies: "Bosch, Siemens, Tata Elxsi",
-  graduationYear: "2026",
-  github: "https://github.com/anaya",
-  linkedin: "https://linkedin.com/in/anaya",
-  portfolio: "https://anaya.dev",
+const emptyProfile = {
+  name: "",
+  email: "",
+  targetRole: "",
+  skills: "",
+  interests: "",
+  locations: "",
+  companies: "",
+  graduationYear: "",
+  github: "",
+  linkedin: "",
+  portfolio: "",
   preferences: {
     theme: "system",
     weeklyDigest: true,
@@ -49,7 +49,7 @@ const demoProfile = {
 export async function GET(request: NextRequest) {
   const auth = readAuth(request);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!process.env.MONGODB_URI) return NextResponse.json({ profile: { ...demoProfile, email: auth.email, name: auth.name } });
+  if (!process.env.MONGODB_URI) return NextResponse.json({ profile: { ...emptyProfile, email: auth.email, name: auth.name } });
 
   await connectToDatabase();
   const user = (await User.findById(auth.userId).lean()) as {
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
       resumeVisibility?: boolean;
     };
   } | null;
-  if (!user) return NextResponse.json({ profile: demoProfile });
+  if (!user) return NextResponse.json({ profile: { ...emptyProfile, email: auth.email, name: auth.name } });
 
   return NextResponse.json({
     profile: {

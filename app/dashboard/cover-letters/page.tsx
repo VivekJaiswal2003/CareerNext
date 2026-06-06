@@ -10,19 +10,18 @@ import { useToast } from "@/components/ui/toast-provider";
 
 const initialLetter = `Dear Hiring Team,
 
-I am applying for the Embedded Software Internship because my recent work in microcontroller-based sensing systems aligns closely with the role. In my final-year project, I built a sensor pipeline that combined firmware, calibration, and a lightweight dashboard to make testing easier for the team.
+I am applying for this internship because my recent project work aligns closely with the role. I have built practical systems that combine technical implementation, debugging, and clear documentation to make collaboration easier for the team.
 
-I would bring careful debugging habits, strong fundamentals in C/C++, and a practical interest in building reliable products. I am especially excited by teams that connect hardware constraints with thoughtful software design.
+I would bring careful problem-solving habits, strong fundamentals, and a practical interest in building reliable products. I am especially excited by teams that value thoughtful engineering and measurable outcomes.
 
 Thank you for considering my application.
 
-Sincerely,
-Anaya Rao`;
+Sincerely,`;
 
 export default function CoverLettersPage() {
   const { toast } = useToast();
-  const [company, setCompany] = useState("Northstar Labs");
-  const [role, setRole] = useState("Embedded Software Intern");
+  const [company, setCompany] = useState("");
+  const [role, setRole] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [letter, setLetter] = useState(initialLetter);
   const [loading, setLoading] = useState(false);

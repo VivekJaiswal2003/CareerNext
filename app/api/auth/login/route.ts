@@ -12,10 +12,11 @@ const LoginSchema = z.object({
 export async function POST(request: Request) {
   const body = LoginSchema.parse(await request.json());
   if (!process.env.MONGODB_URI) {
-    const name = body.email.split("@")[0]?.replace(/[._-]/g, " ") || "CareerNext Student";
-    const token = signToken({ userId: "local-demo-user", email: body.email, name });
+    const inferredName = body.email.split("@")[0]?.replace(/[._-]/g, " ").trim();
+    const name = inferredName || "Student";
+    const token = signToken({ userId: "local-session-user", email: body.email, name });
     setSessionCookie(token);
-    return NextResponse.json({ user: { id: "local-demo-user", name, email: body.email } });
+    return NextResponse.json({ user: { id: "local-session-user", name, email: body.email } });
   }
 
   await connectToDatabase();

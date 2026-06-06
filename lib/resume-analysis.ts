@@ -44,7 +44,7 @@ export const resumeAnalysisFallback: DetailedResumeAnalysis = {
     notes: "Projects are relevant and practical. The next improvement is adding constraints, tradeoffs, and results."
   },
   roleFit: {
-    role: "Embedded Software Intern",
+    role: "Target Internship Role",
     score: 84,
     analysis: "Strong fit for embedded and hardware-adjacent internships; add testing and communication protocol evidence to improve match quality."
   }

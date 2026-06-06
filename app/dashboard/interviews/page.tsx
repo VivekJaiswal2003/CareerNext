@@ -47,7 +47,7 @@ const initialQuestions: Question[] = [
 
 export default function InterviewsPage() {
   const { toast } = useToast();
-  const [role, setRole] = useState("Embedded Software Intern");
+  const [role, setRole] = useState("");
   const [mode, setMode] = useState("technical");
   const [questions, setQuestions] = useState<Question[]>(initialQuestions);
   const [selectedQuestion, setSelectedQuestion] = useState(initialQuestions[0].question);

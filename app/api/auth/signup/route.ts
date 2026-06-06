@@ -13,9 +13,9 @@ const SignupSchema = z.object({
 export async function POST(request: Request) {
   const body = SignupSchema.parse(await request.json());
   if (!process.env.MONGODB_URI) {
-    const token = signToken({ userId: "local-demo-user", email: body.email, name: body.name });
+    const token = signToken({ userId: "local-session-user", email: body.email, name: body.name });
     setSessionCookie(token);
-    return NextResponse.json({ user: { id: "local-demo-user", name: body.name, email: body.email } }, { status: 201 });
+    return NextResponse.json({ user: { id: "local-session-user", name: body.name, email: body.email } }, { status: 201 });
   }
 
   await connectToDatabase();

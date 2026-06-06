@@ -34,7 +34,7 @@ function normalizeRecommendationResult(payload: any): RecommendationResult {
 }
 
 const initialResult: RecommendationResult = {
-  roles: ["Embedded Software Intern", "Hardware Validation Intern", "IoT Product Engineering Intern"],
+  roles: ["Software Engineering Intern", "Product Engineering Intern", "Data Analyst Intern"],
   companies: ["Bosch", "Siemens", "Tata Elxsi", "NovaGrid"],
   missingSkills: ["CAN protocol", "RTOS basics", "Test automation"],
   roadmap: [

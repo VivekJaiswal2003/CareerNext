@@ -12,7 +12,7 @@ const BodySchema = z.object({
 });
 
 const fallback = {
-  roles: ["Embedded Software Intern", "Hardware Validation Intern"],
+  roles: ["Software Engineering Intern", "Product Engineering Intern"],
   companies: ["Bosch", "Siemens", "Tata Elxsi"],
   missingSkills: ["CAN protocol", "Testing workflow"],
   roadmap: [{ title: "Strengthen embedded fundamentals", timeframe: "2 weeks", tasks: ["Review interrupts", "Practice C memory questions"] }],

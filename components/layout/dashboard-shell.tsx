@@ -43,12 +43,34 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const [search, setSearch] = useState("");
+  const [profile, setProfile] = useState<{ name?: string; email?: string } | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
     const stored = window.localStorage.getItem("careernext.theme");
     const nextDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
     setDark(nextDark);
     document.documentElement.classList.toggle("dark", nextDark);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    fetch("/api/user/profile")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        if (active) setProfile(payload?.profile ?? null);
+      })
+      .catch(() => {
+        if (active) setProfile(null);
+      })
+      .finally(() => {
+        if (active) setProfileLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -69,6 +91,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     await fetch("/api/auth/logout", { method: "POST" });
     window.location.href = "/login";
   }
+
+  const displayName = profile?.name?.trim() || "Student";
+  const displayEmail = profile?.email?.trim();
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -121,14 +146,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <details className="group relative">
             <summary className="flex cursor-pointer list-none items-center gap-2 rounded-md p-1.5 hover:bg-muted">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-medium text-white dark:bg-white dark:text-slate-950">
-                {initials("Anaya Rao")}
+                {profileLoading ? "..." : initials(displayName)}
               </span>
               <ChevronDown className="hidden h-4 w-4 text-muted-foreground sm:block" />
             </summary>
             <div className="absolute right-0 mt-2 w-56 rounded-lg border bg-background p-2 shadow-soft">
               <div className="px-3 py-2">
-                <p className="text-sm font-medium">Anaya Rao</p>
-                <p className="text-xs text-muted-foreground">Student workspace</p>
+                <p className="text-sm font-medium">{profileLoading ? "Loading profile..." : displayName}</p>
+                <p className="text-xs text-muted-foreground">{displayEmail || "Student workspace"}</p>
               </div>
               <Link className="block rounded-md px-3 py-2 text-sm hover:bg-muted" href="/dashboard/settings">Settings</Link>
               <button className="w-full rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20" onClick={logout}>

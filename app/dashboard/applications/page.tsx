@@ -22,12 +22,7 @@ type ApplicationItem = {
 
 const statuses: ApplicationStatus[] = ["Applied", "Interview Scheduled", "Rejected", "Offer Received"];
 
-const fallbackApplications: ApplicationItem[] = [
-  { id: "1", company: "Northstar Labs", role: "Embedded Software Intern", status: "Interview Scheduled", date: "May 14", notes: "Prepare UART/SPI examples.", interviewDate: "2026-05-24" },
-  { id: "2", company: "NovaGrid", role: "Hardware Validation Intern", status: "Applied", date: "May 12", notes: "Follow up after one week." },
-  { id: "3", company: "BluePeak Systems", role: "Product Engineering Intern", status: "Applied", date: "May 10", notes: "Customize cover letter." },
-  { id: "4", company: "Astra Mobility", role: "Firmware Intern", status: "Rejected", date: "May 03", notes: "Ask for feedback if possible." }
-];
+const fallbackApplications: ApplicationItem[] = [];
 
 function formatDate(value?: string) {
   if (!value) return "Recent";
