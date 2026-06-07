@@ -167,7 +167,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <div className="absolute right-0 mt-2 w-56 rounded-lg border bg-background p-2 shadow-soft">
               <div className="px-3 py-2">
                 <p className="text-sm font-medium">{profileLoading ? "Loading profile..." : displayName}</p>
-                <p className="text-xs text-muted-foreground">{displayEmail || "Student workspace"}</p>
+                <p className="text-xs text-muted-foreground">{profileLoading ? "Loading email..." : displayEmail || "Update your profile"}</p>
               </div>
               <Link className="block rounded-md px-3 py-2 text-sm hover:bg-muted" href="/dashboard/settings">Settings</Link>
               <button className="w-full rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20" onClick={logout}>
@@ -213,17 +213,30 @@ function SidebarNav({ pathname, profile, profileLoading, onNavigate, onLogout, o
         </div>
       </div>
       <div className="space-y-4 rounded-3xl border border-border/70 bg-muted p-4">
-        <div className="flex items-center gap-3">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">{initials(profile?.name?.trim() || "Student")}</span>
-          <div>
-            <p className="text-sm font-medium">{profile?.name?.trim() || "Student"}</p>
-            <p className="text-xs text-muted-foreground">{profile?.email?.trim() || "Career workspace"}</p>
+        {profileLoading ? (
+          <div className="space-y-3">
+            <div className="h-10 w-full animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-700" />
+            <div className="h-4 w-3/4 animate-pulse rounded-lg bg-slate-200 dark:bg-slate-700" />
+            <div className="grid gap-2">
+              <div className="h-10 w-full animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-700" />
+              <div className="h-10 w-full animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-700" />
+            </div>
           </div>
-        </div>
-        <div className="grid gap-2">
-          <Button variant="outline" className="w-full" onClick={onToggleTheme}>Theme</Button>
-          <Button variant="secondary" className="w-full" onClick={onLogout}>Sign out</Button>
-        </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">{initials(profile?.name?.trim() || "Student")}</span>
+              <div>
+                <p className="text-sm font-medium">{profile?.name?.trim() || "Student"}</p>
+                <p className="text-xs text-muted-foreground">{profile?.email?.trim() || "Career workspace"}</p>
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Button variant="outline" className="w-full" onClick={onToggleTheme}>Theme</Button>
+              <Button variant="secondary" className="w-full" onClick={onLogout}>Sign out</Button>
+            </div>
+          </>
+        )}
       </div>
     </nav>
   );

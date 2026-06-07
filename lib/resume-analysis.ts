@@ -100,7 +100,7 @@ export function extractReadableText(buffer: Buffer, filename: string) {
     .trim();
 
   if (rough.length > 120) return rough.slice(0, 12000);
-  return `Uploaded resume file ${filename}. The binary document could not be fully text-extracted in local demo mode, so analyze using file metadata and common student internship resume expectations.`;
+  return `Uploaded resume file ${filename}. The binary document could not be fully text-extracted, so analyze using file metadata and common student internship resume expectations.`;
 }
 
 export function analyzeResumeLocally(text: string, targetRole = "Software Engineering Intern"): DetailedResumeAnalysis {

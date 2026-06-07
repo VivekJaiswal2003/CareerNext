@@ -16,8 +16,9 @@ import { useResumeAnalysis } from "@/hooks/use-resume-analysis";
 
 export function DashboardHome() {
   const { analysis } = useResumeAnalysis();
-  const atsScore = analysis?.atsScore ?? 82;
-  const roleFit = analysis?.roleFit?.score ?? 84;
+  const atsScore = analysis?.atsScore ?? 0;
+  const roleFit = analysis?.roleFit?.score ?? 0;
+  const projectQuality = analysis?.projectQuality?.score ?? 0;
 
   return (
     <div className="space-y-6">
@@ -41,13 +42,13 @@ export function DashboardHome() {
           <CardContent className="space-y-4">
             <div className="flex items-end justify-between rounded-lg border p-4">
               <div>
-                <p className="text-sm text-muted-foreground">ATS score</p>
+                <p className="text-sm text-muted-foreground">Resume health</p>
                 <p className="mt-1 text-4xl font-semibold">{atsScore}</p>
               </div>
               <Badge>{roleFit}% role fit</Badge>
             </div>
             <p className="text-sm leading-6 text-muted-foreground">
-              {analysis?.summary ?? "Upload a resume to replace this demo snapshot with an immediate Gemini-backed report."}
+              {analysis?.summary ?? "Upload your resume to see recruiter-style feedback on your projects and hit the right keywords."}
             </p>
             <Button asChild variant="outline" className="w-full">
               <Link href="/dashboard/resume">Open full report</Link>
@@ -56,10 +57,10 @@ export function DashboardHome() {
         </Card>
       </section>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Resume score" value={`${atsScore}/100`} hint="Updates after every upload" icon={FileCheck2} />
-        <StatCard label="Applications sent" value="7" hint="3 awaiting response" icon={BriefcaseBusiness} />
-        <StatCard label="Interview readiness" value="76%" hint="Technical round needs practice" icon={Award} />
-        <StatCard label="Skill growth" value="+14%" hint="Embedded C and DSA improved" icon={TrendingUp} />
+        <StatCard label="Resume score" value={`${atsScore}/100`} hint="Based on your latest review" icon={FileCheck2} />
+        <StatCard label="Role fit" value={`${roleFit}%`} hint="How well your resume matches your target role" icon={BriefcaseBusiness} />
+        <StatCard label="Project quality" value={`${projectQuality}/100`} hint="Clarity of outcomes and technical impact" icon={Award} />
+        <StatCard label="Next action" value={analysis?.recommendations?.[0] ? "Review a recommendation" : "Upload a resume"} hint="Action item to move forward" icon={TrendingUp} />
       </div>
       <AiInsightsPanel />
       <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">

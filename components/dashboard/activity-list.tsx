@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const activity = [
-  "Resume score improved after adding project metrics",
-  "Mock technical interview completed for Embedded Systems Intern",
-  "Application moved to Interview Scheduled at NovaGrid",
-  "Roadmap updated with DSA revision block"
+  "Updated project bullets with clearer outcomes",
+  "Saved application status and next follow-up step",
+  "Reviewed interview practice questions for your target role",
+  "Added a focused weekly task for skills and applications"
 ];
 
 export function ActivityList() {

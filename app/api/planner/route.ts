@@ -6,12 +6,12 @@ import { PlannerTask } from "@/models/PlannerTask";
 
 const weekOf = new Date().toISOString().slice(0, 10);
 const defaultTasks = [
-  "Rewrite two project bullets with measurable outcomes",
-  "Solve 6 array/string interview problems",
-  "Practice UART/SPI explanation out loud",
-  "Apply to 4 firmware or validation internships",
-  "Send one thoughtful follow-up email"
-].map((title, index) => ({ id: `demo-${index}`, title, completed: false, category: "career", weekOf }));
+  "Rewrite project bullets with measurable outcomes",
+  "Practice two interview questions for your target role",
+  "Track application status and next follow-up step",
+  "Review one technical skill that appears in your desired listings",
+  "Send a professional follow-up note after each interview"
+].map((title, index) => ({ id: `task-${index}`, title, completed: false, category: "career", weekOf }));
 
 export async function GET(request: NextRequest) {
   const auth = readAuth(request);

@@ -2,33 +2,10 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, BarChart3, CheckCircle2, FileCheck2, MessagesSquare, SearchCheck, Workflow, Calendar } from "lucide-react";
+import { ArrowRight, BarChart3, CheckCircle2, FileCheck2, MessagesSquare, SearchCheck, Calendar } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-
-const companies = [
-  ["Vercel", "https://vercel.com/careers"],
-  ["Stripe", "https://stripe.com/jobs"],
-  ["Google", "https://careers.google.com/students/"],
-  ["Notion", "https://www.notion.so/careers"],
-  ["Linear", "https://linear.app/careers"],
-  ["Atlassian", "https://www.atlassian.com/company/careers"]
-];
-
-const stories = [
-  {
-    title: "Case study — resume refinement",
-    summary: "A student revised project bullets to include measurable impact and interview invites improved.",
-    details: "Focus on one project and add numbers (throughput, time saved, tests written)."
-  },
-  {
-    title: "Case study — interview preparation",
-    summary: "Practice answers and a clear troubleshooting story led to better technical interviews.",
-    details: "Structure answers: situation, approach, result, and a short lesson learned."
-  }
-];
 
 const workflows = [
   { icon: FileCheck2, title: "Resume Review", text: "Highlight your projects, show measurable impact, and fix common formatting issues." },
@@ -50,30 +27,32 @@ export function LandingExperience() {
           </div>
           <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.88fr_1.12fr] lg:px-8 lg:py-24">
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="flex flex-col justify-center">
-              <Badge className="mb-5 w-fit bg-background/80 shadow-sm">Tools for students</Badge>
+              <Badge className="mb-5 w-fit bg-background/80 shadow-sm">CareerNext for students</Badge>
               <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-4xl">
-                CareerNext helps students improve resumes, prepare for interviews, and keep track of applications in one place.
+                Improve your resume, prepare for interviews, and manage applications in one place.
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
-                Practical features built for students: resume feedback, interview practice, and simple application tracking.
+                CareerNext helps students identify resume gaps, practice interviews, track applications, and stay organized throughout the job search process.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild className="pressable">
-                  <Link href="/signup">Get Started <ArrowRight className="h-4 w-4" /></Link>
+                  <Link href="/signup">Get started <ArrowRight className="h-4 w-4" /></Link>
                 </Button>
                 <Button asChild variant="outline" className="pressable bg-background/70">
-                  <Link href="/dashboard">View Dashboard</Link>
+                  <Link href="/dashboard">Open dashboard</Link>
                 </Button>
               </div>
-              <div className="mt-8 grid max-w-xl grid-cols-3 gap-4 text-sm">
+              <div className="mt-8 grid max-w-2xl gap-3 text-sm sm:grid-cols-2">
                 {[
-                  ["Resume Review", "Clear feedback on projects and formatting"],
-                  ["Interview Practice", "Short mock questions with notes"],
-                  ["Application Tracker", "Statuses, next steps, and reminders"]
+                  ["Resume Review", "Get clear feedback on formatting, project descriptions, and career focus."],
+                  ["ATS Analysis", "Spot missing role-specific keywords and make your resume easier to find."],
+                  ["Interview Practice", "Prepare technical and behavioral answers with short, practical review notes."],
+                  ["Application Tracking", "Track each application status, next step, and follow-up plan."],
+                  ["Career Planning", "Maintain a weekly task list for applications, skills, and interview prep."]
                 ].map(([value, label]) => (
-                  <div key={String(value)} className="rounded-lg border bg-background/70 p-3 shadow-sm backdrop-blur">
+                  <div key={String(value)} className="rounded-xl border bg-background/90 p-4 shadow-sm">
                     <p className="text-sm font-semibold">{value}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">{label}</p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{label}</p>
                   </div>
                 ))}
               </div>
@@ -119,19 +98,6 @@ export function LandingExperience() {
           </div>
         </section>
 
-        <section className="border-b bg-muted/30">
-          <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 sm:px-6 lg:px-8">
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Built for students preparing for teams like</p>
-            <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground sm:grid-cols-3 lg:grid-cols-6">
-              {companies.map(([company, href]) => (
-                <a key={company} href={href} target="_blank" rel="noreferrer" className="pressable rounded-md border bg-background px-3 py-2 text-center hover:border-primary hover:text-foreground">
-                  {company}
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section id="features" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
             <div>
@@ -164,26 +130,28 @@ export function LandingExperience() {
         </section>
 
         <section className="border-t">
-          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">From resume upload to weekly execution.</h2>
-              <p className="mt-3 leading-7 text-muted-foreground">CareerNext turns an analysis into skill gaps, JD matching, mock interviews, and a weekly planner that can be checked off.</p>
-            </div>
-            <div className="space-y-3">
-              {[
-                ["Upload", "PDF/DOCX resume stored locally and analyzed"],
-                ["Match", "Compare resume to a real job description"],
-                ["Practice", "Answer one question at a time in mock mode"],
-                ["Plan", "Follow a focused weekly career schedule"]
-              ].map(([title, text], index) => (
-                <div key={title} className="flex gap-4 rounded-lg border bg-background p-4 shadow-sm">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted text-sm font-semibold">{index + 1}</span>
-                  <div>
-                    <p className="font-medium">{title}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+          <div className="mx-auto max-w-7xl gap-8 px-4 py-16 sm:px-6 lg:px-8">
+            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+              <div>
+                <h2 className="text-2xl font-semibold tracking-tight">How CareerNext helps you stay on track</h2>
+                <p className="mt-3 leading-7 text-muted-foreground">Use focused resume feedback, targeted interview practice, and clear application tracking to move from job search to offer-ready momentum.</p>
+              </div>
+              <div className="space-y-3">
+                {[
+                  ["Upload", "Add your resume or job description to get immediate, practical feedback."],
+                  ["Review", "See clear notes on keyword gaps, project impact, and recruiter focus."],
+                  ["Practice", "Work through short interview questions and improve your answer flow."],
+                  ["Track", "Keep each application status, deadline and next step in one workspace."]
+                ].map(([title, text], index) => (
+                  <div key={title} className="flex gap-4 rounded-xl border bg-background p-4 shadow-sm">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted text-sm font-semibold">{index + 1}</span>
+                    <div>
+                      <p className="font-medium">{title}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -191,19 +159,18 @@ export function LandingExperience() {
         <section className="border-t bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="max-w-2xl">
-              <h2 className="text-2xl font-semibold tracking-tight">Student case studies</h2>
-              <p className="mt-3 text-muted-foreground">Examples of realistic improvements students can make with focused edits and practice.</p>
+              <h2 className="text-2xl font-semibold tracking-tight">Who is CareerNext for?</h2>
+              <p className="mt-3 text-muted-foreground">A workspace built for the early stage of your career search.</p>
             </div>
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              {stories.map((story, idx) => (
-                <div key={idx} className="rounded-lg border bg-background p-5 shadow-sm">
-                  <p className="text-sm leading-6">{story.summary}</p>
-                  <div className="mt-5 flex items-center justify-between gap-4">
-                    <div>
-                      <p className="font-medium">{story.title}</p>
-                      <p className="text-sm text-muted-foreground">{story.details}</p>
-                    </div>
-                  </div>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                "Final-year students",
+                "Internship seekers",
+                "Fresh graduates",
+                "Students preparing for technical interviews"
+              ].map((item) => (
+                <div key={item} className="rounded-2xl border bg-background p-5 shadow-sm">
+                  <p className="font-medium">{item}</p>
                 </div>
               ))}
             </div>
@@ -217,8 +184,8 @@ export function LandingExperience() {
               {[
                 ["Does CareerNext replace career counselors?", "No. Use it to prepare questions and homework between meetings."],
                 ["Can I use it without a finished resume?", "Yes. Upload a draft to get clear, practical suggestions to improve specific sections."],
-                ["What happens to my data?", "Uploads are stored as described in the privacy section; only you and your account can access your files unless you share them."],
-                ["Which AI provider does it use?", "The product can use Google Gemini for analysis; there are conservative fallbacks for local testing."]
+                ["What happens to my data?", "Uploads are stored according to the app settings; only your account can access your documents unless you share them."],
+                ["Which analysis provider does it use?", "The product can use Google Gemini for resume feedback and interview guidance, but it also works with local fallback checks."]
               ].map(([q, a]) => (
                 <div key={q} className="p-5">
                   <p className="font-medium">{q}</p>

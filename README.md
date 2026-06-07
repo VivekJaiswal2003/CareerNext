@@ -66,7 +66,7 @@ Open `http://localhost:3001`.
 
 ## Environment Notes
 
-`GOOGLE_GEMINI_API_KEY` is optional for local UI exploration. API routes include conservative fallback responses so the product can be tested without calling Gemini. For production use, configure the key in Vercel.
+`GOOGLE_GEMINI_API_KEY` is optional for local preview. API routes include fallback responses for simpler local testing, but production should be configured with a real Gemini key and MongoDB connection.
 
 `MONGODB_URI` and `JWT_SECRET` are required for authentication and persistence.
 
@@ -112,10 +112,6 @@ Add production screenshots after deployment:
 - JWT sessions are stored in HTTP-only cookies
 - Dashboard routes are protected through Next.js middleware
 - AI calls use only Google Gemini through `@google/generative-ai`
-
-## Current Demo Data
-
-Several dashboard screens include realistic seeded interface data so the product feels complete during evaluation. When `MONGODB_URI` or `GOOGLE_GEMINI_API_KEY` are not configured, API routes return realistic fallback responses so judges can test the product locally without external setup. When environment variables are present, the same routes use MongoDB and Gemini.
 
 ## Hackathon QA Checklist
 

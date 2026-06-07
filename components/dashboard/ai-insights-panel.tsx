@@ -14,13 +14,13 @@ export function AiInsightsPanel() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Insights</CardTitle>
+        <CardTitle>Review notes</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <Insight icon={Brain} title="Resume weakness" text={weaknesses[0] ?? "No major weaknesses found."} />
-        <Insight icon={TrendingUp} title="Application note" text="Focus applications on roles where your projects are directly relevant." />
-        <Insight icon={BriefcaseBusiness} title="Suggested skills" text={(missing || []).slice(0, 3).join(", ") || "No specific keywords suggested."} />
-        <Insight icon={Eye} title="Recruiter note" text={report.roleFit.analysis || "Add more concrete project impact to help reviewers."} />
+        <Insight icon={TrendingUp} title="Opportunity" text={report.recommendations[0] ?? "Use the dashboard suggestions to sharpen your next update."} />
+        <Insight icon={BriefcaseBusiness} title="Skills to emphasize" text={(missing || []).slice(0, 3).join(", ") || "Your keywords are on target; keep them clear."} />
+        <Insight icon={Eye} title="Recruiter note" text={report.roleFit.analysis || "Clarify project outcomes and role contributions."} />
       </CardContent>
     </Card>
   );
