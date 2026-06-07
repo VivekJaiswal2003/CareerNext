@@ -1,0 +1,14 @@
+node_modules
+.next
+.env*
+Dockerfile
+docker-compose*.yml
+.dockerignore
+.git
+.gitignore
+npm-debug.log
+.vscode
+.idea
+dist
+coverage
+public/uploads
