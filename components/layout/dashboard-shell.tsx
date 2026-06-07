@@ -96,27 +96,19 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const displayEmail = profile?.email?.trim();
 
   return (
-    <div className="min-h-screen bg-background">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r bg-background lg:block">
-        <div className="flex h-16 items-center border-b px-6">
+    <div className="min-h-screen bg-muted/30">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r bg-background/95 backdrop-blur lg:block">
+        <div className="flex h-20 items-center border-b border-border/70 px-6">
           <Brand />
         </div>
-        <div className="flex h-[calc(100vh-64px)] flex-col justify-between">
-          <SidebarNav pathname={pathname} />
-          <div className="border-t p-4">
-            <div className="flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-xs font-medium text-white dark:bg-white dark:text-slate-950">{profileLoading ? "..." : initials(displayName)}</span>
-              <div className="flex-1 min-w-0">
-                <p className="truncate text-sm font-medium">{profileLoading ? "Loading..." : displayName}</p>
-                <p className="truncate text-xs text-muted-foreground">{displayEmail || "Student workspace"}</p>
-              </div>
-            </div>
-            <div className="mt-3 flex gap-2">
-              <Link href="/dashboard/settings" className="text-sm text-muted-foreground hover:text-foreground">Settings</Link>
-              <button onClick={logout} className="ml-auto text-sm text-red-600 hover:underline">Logout</button>
-            </div>
-          </div>
-        </div>
+        <SidebarNav
+          pathname={pathname}
+          profile={profile}
+          profileLoading={profileLoading}
+          onNavigate={() => {}}
+          onLogout={logout}
+          onToggleTheme={toggleTheme}
+        />
       </aside>
       {drawerOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
@@ -128,22 +120,29 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 <PanelLeftClose className="h-5 w-5" />
               </Button>
             </div>
-            <SidebarNav pathname={pathname} onNavigate={() => setDrawerOpen(false)} />
+            <SidebarNav
+              pathname={pathname}
+              profile={profile}
+              profileLoading={profileLoading}
+              onNavigate={() => setDrawerOpen(false)}
+              onLogout={logout}
+              onToggleTheme={toggleTheme}
+            />
           </aside>
         </div>
       )}
-      <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/75 px-4 backdrop-blur-sm sm:px-6">
+      <div className="lg:pl-72">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/90 px-4 backdrop-blur sm:px-6">
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setDrawerOpen(true)} aria-label="Open navigation">
             <Menu className="h-5 w-5" />
           </Button>
           <div className="hidden sm:block lg:hidden">
             <Brand />
           </div>
-          <div className="relative max-w-2xl flex-1">
-            <Search className="absolute left-4 top-3 h-4 w-4 text-muted-foreground" />
+          <div className="relative max-w-xl flex-1">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              className="pl-11 rounded-full bg-muted/40 py-2 pr-4"
+              className="pl-9"
               placeholder="Search applications, roles, companies"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -153,19 +152,20 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </div>
           <button className="relative rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground" aria-label="Notifications">
             <Bell className="h-5 w-5" />
-            <span className="absolute -right-0.5 -top-0.5 inline-flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[10px] text-white">•</span>
+            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
           </button>
           <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle dark mode">
             {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
           <details className="group relative">
             <summary className="flex cursor-pointer list-none items-center gap-2 rounded-md p-1.5 hover:bg-muted">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-xs font-medium text-white dark:bg-white dark:text-slate-950">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-medium text-white dark:bg-white dark:text-slate-950">
                 {profileLoading ? "..." : initials(displayName)}
               </span>
+              <ChevronDown className="hidden h-4 w-4 text-muted-foreground sm:block" />
             </summary>
-            <div className="absolute right-0 mt-2 w-64 rounded-lg border bg-background p-3 shadow-soft">
-              <div className="px-2 py-2">
+            <div className="absolute right-0 mt-2 w-56 rounded-lg border bg-background p-2 shadow-soft">
+              <div className="px-3 py-2">
                 <p className="text-sm font-medium">{profileLoading ? "Loading profile..." : displayName}</p>
                 <p className="text-xs text-muted-foreground">{displayEmail || "Student workspace"}</p>
               </div>
@@ -182,29 +182,49 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function SidebarNav({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+function SidebarNav({ pathname, profile, profileLoading, onNavigate, onLogout, onToggleTheme }: { pathname: string; profile: { name?: string; email?: string } | null; profileLoading: boolean; onNavigate?: () => void; onLogout: () => void; onToggleTheme: () => void; }) {
   return (
-    <nav className="space-y-2 p-4">
-      {navItems.map((item) => {
-        const active = pathname === item.href;
-        const Icon = item.icon;
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={onNavigate}
-            className={cn(
-              "relative flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
-              active
-                ? "bg-primary/5 text-foreground font-medium border-l-4 border-primary/70 pl-3"
-                : "hover:bg-muted"
-            )}
-          >
-            <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-            <span className="truncate">{item.label}</span>
-          </Link>
-        );
-      })}
+    <nav className="flex h-full flex-col justify-between px-4 py-6">
+      <div className="space-y-4">
+        <div className="rounded-3xl border border-border/70 bg-muted p-4">
+          <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Workspace</p>
+          <p className="mt-3 text-sm font-semibold text-foreground">CareerNext</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">Track applications, optimize resumes, and prepare interviews with confidence.</p>
+        </div>
+        <div className="space-y-1">
+          {navItems.map((item) => {
+            const active = pathname === item.href;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onNavigate}
+                className={cn(
+                  "flex items-center gap-3 rounded-3xl px-4 py-3 text-sm transition hover:bg-muted hover:text-foreground",
+                  active ? "bg-primary/10 font-semibold text-foreground" : "text-muted-foreground"
+                )}
+              >
+                <Icon className={cn("h-4 w-4 shrink-0", active ? "text-primary" : "text-muted-foreground")} />
+                <span className="truncate">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+      <div className="space-y-4 rounded-3xl border border-border/70 bg-muted p-4">
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">{initials(profile?.name?.trim() || "Student")}</span>
+          <div>
+            <p className="text-sm font-medium">{profile?.name?.trim() || "Student"}</p>
+            <p className="text-xs text-muted-foreground">{profile?.email?.trim() || "Career workspace"}</p>
+          </div>
+        </div>
+        <div className="grid gap-2">
+          <Button variant="outline" className="w-full" onClick={onToggleTheme}>Theme</Button>
+          <Button variant="secondary" className="w-full" onClick={onLogout}>Sign out</Button>
+        </div>
+      </div>
     </nav>
   );
 }

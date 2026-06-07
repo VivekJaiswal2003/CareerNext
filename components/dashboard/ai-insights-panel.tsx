@@ -1,7 +1,6 @@
 "use client";
 
 import { Brain, BriefcaseBusiness, Eye, TrendingUp } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { normalizeAnalysis } from "@/lib/resume-analysis";
 import { useResumeAnalysis } from "@/hooks/use-resume-analysis";
@@ -11,21 +10,17 @@ export function AiInsightsPanel() {
   const report = normalizeAnalysis(analysis);
   const weaknesses = report.weaknesses;
   const missing = report.missingSkills;
-  const probability = Math.min(92, Math.round(((report.atsScore ?? 0) + (report.roleFit.score ?? 0)) / 2) - 9);
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between gap-3">
-          <CardTitle>AI career insights</CardTitle>
-          <Badge>{probability}% hiring probability</Badge>
-        </div>
+        <CardTitle>Insights</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <Insight icon={Brain} title="Resume weakness" text={weaknesses[0]} />
-        <Insight icon={TrendingUp} title="Application trend" text="Responses improve when hardware-adjacent roles are prioritized over broad software roles." />
-        <Insight icon={BriefcaseBusiness} title="Suggested skills" text={missing.slice(0, 3).join(", ")} />
-        <Insight icon={Eye} title="Recruiter impression" text={report.roleFit.analysis} />
+        <Insight icon={Brain} title="Resume weakness" text={weaknesses[0] ?? "No major weaknesses found."} />
+        <Insight icon={TrendingUp} title="Application note" text="Focus applications on roles where your projects are directly relevant." />
+        <Insight icon={BriefcaseBusiness} title="Suggested skills" text={(missing || []).slice(0, 3).join(", ") || "No specific keywords suggested."} />
+        <Insight icon={Eye} title="Recruiter note" text={report.roleFit.analysis || "Add more concrete project impact to help reviewers."} />
       </CardContent>
     </Card>
   );

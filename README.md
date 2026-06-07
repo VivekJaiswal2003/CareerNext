@@ -6,7 +6,7 @@ It helps users analyze resumes, improve ATS readiness, prepare for interviews, d
 
 ## Product Scope
 
-- Resume analyzer with ATS score, skill extraction, missing skills, and practical recommendations
+- Resume analyzer with skill extraction, missing skills, and practical recommendations
 - PDF/DOCX resume upload to `public/uploads/`
 - Job description vs resume matcher with compatibility scoring
 - Internship recommendation workflow based on skills, interests, and preferred roles
@@ -14,7 +14,7 @@ It helps users analyze resumes, improve ATS readiness, prepare for interviews, d
 - Immersive mock interview mode with timer, follow-up questions, and confidence/technical/communication scores
 - Cover letter generator with editable document-style output
 - Job application tracker with kanban and table views
-- AI career insights panel with recruiter impression, hiring probability, and trend signals
+- Insights panel with concise recruiter-style feedback and suggested next steps
 - Weekly career planner with completion tracking and regeneration
 - JWT authentication with protected dashboard routes
 - MongoDB Atlas persistence through Mongoose models

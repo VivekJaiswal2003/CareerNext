@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, BarChart3, CheckCircle2, FileCheck2, MessagesSquare, SearchCheck, Workflow } from "lucide-react";
+import { ArrowRight, BarChart3, CheckCircle2, FileCheck2, MessagesSquare, SearchCheck, Workflow, Calendar } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,24 +19,23 @@ const companies = [
 
 const stories = [
   {
-    name: "Meera K.",
-    role: "ECE student",
-    result: "Moved from a generic resume to 4 interview callbacks in three weeks.",
-    quote: "The feedback was specific enough that I knew what to rewrite first."
+    title: "Case study — resume refinement",
+    summary: "A student revised project bullets to include measurable impact and interview invites improved.",
+    details: "Focus on one project and add numbers (throughput, time saved, tests written)."
   },
   {
-    name: "Arjun S.",
-    role: "Final-year engineering",
-    result: "Built a weekly roadmap around firmware roles and stopped applying blindly.",
-    quote: "It connected my project work to the roles I actually wanted."
+    title: "Case study — interview preparation",
+    summary: "Practice answers and a clear troubleshooting story led to better technical interviews.",
+    details: "Structure answers: situation, approach, result, and a short lesson learned."
   }
 ];
 
 const workflows = [
-  { icon: FileCheck2, title: "Resume signal", text: "ATS gaps, recruiter risks, and project quality in one review." },
-  { icon: SearchCheck, title: "Opportunity fit", text: "Internship targets matched to skills, interests, and location preferences." },
-  { icon: MessagesSquare, title: "Interview readiness", text: "Practice rounds with technical depth and communication feedback." },
-  { icon: Workflow, title: "Pipeline discipline", text: "Applications, follow-ups, and outcomes stay visible without spreadsheet clutter." }
+  { icon: FileCheck2, title: "Resume Review", text: "Highlight your projects, show measurable impact, and fix common formatting issues." },
+  { icon: SearchCheck, title: "ATS Analysis", text: "Detect missing keywords and suggest role-specific terms to improve recruiter matches." },
+  { icon: MessagesSquare, title: "Interview Practice", text: "Practice common questions, record answers, and get targeted feedback." },
+  { icon: BarChart3, title: "Application Tracking", text: "Keep applications, statuses, and next steps in one place without spreadsheets." },
+  { icon: Calendar, title: "Career Planning", text: "Small weekly tasks to build projects, study topics, and apply consistently." }
 ];
 
 export function LandingExperience() {
@@ -51,12 +50,12 @@ export function LandingExperience() {
           </div>
           <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.88fr_1.12fr] lg:px-8 lg:py-24">
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="flex flex-col justify-center">
-              <Badge className="mb-5 w-fit bg-background/80 shadow-sm">AI-powered career workspace</Badge>
-              <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-6xl">
-                Build your career with clarity, not guesswork.
+              <Badge className="mb-5 w-fit bg-background/80 shadow-sm">Tools for students</Badge>
+              <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-4xl">
+                CareerNext helps students improve resumes, prepare for interviews, and keep track of applications in one place.
               </h1>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-muted-foreground">
-                CareerNext gives students a practical AI workspace for resumes, interview prep, internship targeting, weekly planning, and application momentum.
+              <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+                Practical features built for students: resume feedback, interview practice, and simple application tracking.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild className="pressable">
@@ -68,12 +67,12 @@ export function LandingExperience() {
               </div>
               <div className="mt-8 grid max-w-xl grid-cols-3 gap-4 text-sm">
                 {[
-                  ["82", "avg ATS score"],
-                  ["3.4x", "clearer next steps"],
-                  ["7 days", "weekly plan cycle"]
+                  ["Resume Review", "Clear feedback on projects and formatting"],
+                  ["Interview Practice", "Short mock questions with notes"],
+                  ["Application Tracker", "Statuses, next steps, and reminders"]
                 ].map(([value, label]) => (
-                  <div key={label} className="rounded-lg border bg-background/70 p-3 shadow-sm backdrop-blur">
-                    <p className="text-2xl font-semibold">{value}</p>
+                  <div key={String(value)} className="rounded-lg border bg-background/70 p-3 shadow-sm backdrop-blur">
+                    <p className="text-sm font-semibold">{value}</p>
                     <p className="mt-1 text-xs text-muted-foreground">{label}</p>
                   </div>
                 ))}
@@ -82,34 +81,31 @@ export function LandingExperience() {
             <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.1 }} className="relative">
               <div className="animate-float-soft rounded-2xl border bg-background/90 p-3 shadow-soft backdrop-blur">
                 <div className="rounded-xl border bg-background p-5">
-                  <div className="flex flex-col gap-4 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <p className="text-sm font-medium">Career readiness command center</p>
-                      <p className="text-xs text-muted-foreground">Resume, interviews, applications, roadmap</p>
+                    <div className="flex flex-col gap-4 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="text-sm font-medium">Snapshot</p>
+                        <p className="text-xs text-muted-foreground">A short summary of the latest resume review and next steps.</p>
+                      </div>
                     </div>
-                    <Badge className="w-fit bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-200">Hiring probability 68%</Badge>
-                  </div>
                   <div className="grid gap-4 py-5 md:grid-cols-[0.9fr_1.1fr]">
                     <div className="space-y-3">
-                      {["ATS score 82", "Interview readiness 76%", "Applications sent 17"].map((item, index) => (
+                      {["Resume review", "Interview practice", "Application tracker"].map((item, index) => (
                         <Link key={item} href={index === 0 ? "/dashboard/resume" : index === 1 ? "/dashboard/interviews" : "/dashboard/applications"} className="pressable block rounded-lg border p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                           <div className="flex items-center justify-between">
                             <p className="text-sm font-medium">{item}</p>
                             <BarChart3 className="h-4 w-4 text-muted-foreground" />
                           </div>
-                          <div className="mt-4 h-2 rounded-full bg-muted">
-                            <div className={cn("h-2 rounded-full bg-primary", index === 0 ? "w-4/5" : index === 1 ? "w-3/4" : "w-2/3")} />
-                          </div>
+                          <div className="mt-2 text-xs text-muted-foreground">Open to view recent feedback and suggested next steps.</div>
                         </Link>
                       ))}
                     </div>
                     <div className="rounded-lg border bg-muted/30 p-4">
-                      <p className="text-sm font-semibold">AI career insight</p>
+                      <p className="text-sm font-semibold">Insights</p>
                       <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                        Recruiter impression is strong for embedded roles, but project bullets need more measurable outcomes and protocol-specific keywords.
+                        Quick, practical notes from your latest resume review. These are suggestions to try—not guarantees.
                       </p>
                       <div className="mt-4 space-y-2">
-                        {["Add CAN/SPI evidence", "Practice debugging story", "Apply to hardware validation roles"].map((task) => (
+                        {["Add quantified project impact", "Include protocol names where relevant", "Clarify your role on projects"].map((task) => (
                           <div key={task} className="flex items-center gap-2 rounded-md bg-background px-3 py-2 text-sm">
                             <CheckCircle2 className="h-4 w-4 text-primary" /> {task}
                           </div>
@@ -139,9 +135,9 @@ export function LandingExperience() {
         <section id="features" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
             <div>
-              <Badge>Product workflow</Badge>
-              <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">A career operating system, not another advice page.</h2>
-              <p className="mt-3 leading-7 text-muted-foreground">Students need a place where feedback becomes scheduled work, and applications become a manageable pipeline.</p>
+              <Badge>Features</Badge>
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">Simple tools to improve your applications</h2>
+              <p className="mt-3 leading-7 text-muted-foreground">Short, practical features to improve resumes, practice interviews, and keep applications organized.</p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {workflows.map((feature, index) => {
@@ -195,19 +191,18 @@ export function LandingExperience() {
         <section className="border-t bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="max-w-2xl">
-              <h2 className="text-2xl font-semibold tracking-tight">Student success stories</h2>
-              <p className="mt-3 text-muted-foreground">Realistic outcomes CareerNext is designed to support: clearer resumes, sharper interviews, and better application habits.</p>
+              <h2 className="text-2xl font-semibold tracking-tight">Student case studies</h2>
+              <p className="mt-3 text-muted-foreground">Examples of realistic improvements students can make with focused edits and practice.</p>
             </div>
             <div className="mt-8 grid gap-4 md:grid-cols-2">
-              {stories.map((story) => (
-                <div key={story.name} className="rounded-lg border bg-background p-5 shadow-sm">
-                  <p className="text-sm leading-6">&quot;{story.quote}&quot;</p>
+              {stories.map((story, idx) => (
+                <div key={idx} className="rounded-lg border bg-background p-5 shadow-sm">
+                  <p className="text-sm leading-6">{story.summary}</p>
                   <div className="mt-5 flex items-center justify-between gap-4">
                     <div>
-                      <p className="font-medium">{story.name}</p>
-                      <p className="text-sm text-muted-foreground">{story.role}</p>
+                      <p className="font-medium">{story.title}</p>
+                      <p className="text-sm text-muted-foreground">{story.details}</p>
                     </div>
-                    <Badge>{story.result}</Badge>
                   </div>
                 </div>
               ))}
@@ -220,9 +215,10 @@ export function LandingExperience() {
             <h2 className="text-2xl font-semibold tracking-tight">FAQ</h2>
             <div className="mt-6 divide-y rounded-lg border bg-background">
               {[
-                ["Does CareerNext replace career counselors?", "No. It gives students structured preparation between counselor meetings."],
-                ["Can I use it without a perfect resume?", "Yes. The first upload is meant to find the highest-leverage improvements."],
-                ["Which AI provider does it use?", "CareerNext uses Google Gemini through @google/generative-ai, with realistic fallback responses for local demos."]
+                ["Does CareerNext replace career counselors?", "No. Use it to prepare questions and homework between meetings."],
+                ["Can I use it without a finished resume?", "Yes. Upload a draft to get clear, practical suggestions to improve specific sections."],
+                ["What happens to my data?", "Uploads are stored as described in the privacy section; only you and your account can access your files unless you share them."],
+                ["Which AI provider does it use?", "The product can use Google Gemini for analysis; there are conservative fallbacks for local testing."]
               ].map(([q, a]) => (
                 <div key={q} className="p-5">
                   <p className="font-medium">{q}</p>

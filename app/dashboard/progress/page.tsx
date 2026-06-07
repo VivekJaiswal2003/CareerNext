@@ -5,32 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useResumeAnalysis } from "@/hooks/use-resume-analysis";
 
-const atsTrend = [
-  { week: "Week 1", score: 58 },
-  { week: "Week 2", score: 64 },
-  { week: "Week 3", score: 71 },
-  { week: "Week 4", score: 76 },
-  { week: "Week 5", score: 82 }
-];
+type AtsPoint = { week: string; score: number };
+type ReadinessPoint = { area: string; value: number };
+type ApplicationPoint = { week: string; count: number };
 
-const readiness = [
-  { area: "HR", value: 84 },
-  { area: "Technical", value: 72 },
-  { area: "ECE", value: 78 },
-  { area: "Projects", value: 86 }
-];
+const atsTrend: AtsPoint[] = [];
 
-const applications = [
-  { week: "W1", count: 2 },
-  { week: "W2", count: 3 },
-  { week: "W3", count: 5 },
-  { week: "W4", count: 7 }
-];
+const readiness: ReadinessPoint[] = [];
+
+const applications: ApplicationPoint[] = [];
 
 export default function ProgressPage() {
   const { analysis } = useResumeAnalysis();
-  const currentScore = analysis?.atsScore ?? 82;
-  const trend = [...atsTrend.slice(0, -1), { week: "Current", score: currentScore }];
+  const currentScore = typeof analysis?.atsScore === "number" ? analysis.atsScore : null;
+  const trend = currentScore !== null ? [...atsTrend.slice(0, -1), { week: "Current", score: currentScore }] : atsTrend;
 
   return (
     <div className="space-y-6">
@@ -39,9 +27,27 @@ export default function ProgressPage() {
         <p className="mt-1 text-sm text-muted-foreground">Track resume quality, interview readiness, applications, and skill growth.</p>
       </div>
       <div className="grid gap-4 md:grid-cols-3">
-        <Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Current ATS</p><p className="mt-2 text-3xl font-semibold">{currentScore}</p><Badge className="mt-4">+24 since baseline</Badge></CardContent></Card>
-        <Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Interview readiness</p><p className="mt-2 text-3xl font-semibold">78%</p><Badge className="mt-4">Technical needs practice</Badge></CardContent></Card>
-        <Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Applications sent</p><p className="mt-2 text-3xl font-semibold">17</p><Badge className="mt-4">5 this week</Badge></CardContent></Card>
+        <Card>
+          <CardContent className="p-5">
+            <p className="text-sm text-muted-foreground">Current resume score</p>
+            <p className="mt-2 text-3xl font-semibold">{currentScore ?? "—"}</p>
+            <p className="mt-4 text-xs text-muted-foreground">Upload or analyze a resume to see a score.</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-5">
+            <p className="text-sm text-muted-foreground">Interview readiness</p>
+            <p className="mt-2 text-3xl font-semibold">{analysis?.roleFit?.score ?? "—"}</p>
+            <p className="mt-4 text-xs text-muted-foreground">Practice answers to improve this metric.</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-5">
+            <p className="text-sm text-muted-foreground">Applications sent</p>
+            <p className="mt-2 text-3xl font-semibold">{applications.length ? applications.reduce((s, a) => s + (a.count || 0), 0) : "—"}</p>
+            <p className="mt-4 text-xs text-muted-foreground">Track sent applications here as you add them.</p>
+          </CardContent>
+        </Card>
       </div>
       <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
         <Card>
@@ -73,7 +79,7 @@ export default function ProgressPage() {
         </Card>
       </div>
       <Card>
-        <CardHeader><CardTitle>Application momentum</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Application progress</CardTitle></CardHeader>
         <CardContent className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={applications}>
